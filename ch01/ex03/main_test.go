@@ -14,16 +14,20 @@ func Benchmark_LongStringConcat(b *testing.B) {
 		strings.Repeat("5", 1000000),
 	}
 
-	b.ResetTimer()
-
 	b.Run("assignment operator", func(b *testing.B) {
-		str := ""
-		for _, s := range slice {
-			str += " " + s
+		b.ResetTimer()
+		for i := 0; i < 100; i++ {
+			str := ""
+			for _, s := range slice {
+				str += " " + s
+			}
 		}
 	})
 
 	b.Run("strings.Join", func(b *testing.B) {
-		_ = strings.Join(slice, " ")
+		b.ResetTimer()
+		for i := 0; i < 100; i++ {
+			_ = strings.Join(slice, " ")
+		}
 	})
 }
