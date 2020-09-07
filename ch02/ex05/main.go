@@ -20,7 +20,7 @@ func PopCountWithShift(x uint64) int {
 }
 
 func PopCountWithLoop(x uint64) int {
-	c := 0
+	var c int
 	for x != 0 {
 		x &= x - 1
 		c++
