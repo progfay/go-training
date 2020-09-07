@@ -9,12 +9,6 @@ import (
 	"strconv"
 )
 
-// const (
-//
-// )
-
-// var sin30, cos30 = math.Sin(angle), math.Cos(angle)
-
 func main() {
 	http.HandleFunc("/", diagramHandler)
 
