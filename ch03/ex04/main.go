@@ -9,6 +9,58 @@ import (
 	"strconv"
 )
 
+const formStr string = `
+<form action="/">
+    <div>
+        <label for="cells">cells: </label>
+        <input id="cells" type="number" name="cells" value="100">
+
+        <label for="width">width: </label>
+        <input id="width" type="number" name="width" value="600">
+
+        <label for="height">height: </label>
+        <input id="height" type="number" name="height" value="320">
+    </div>
+
+    <div>
+        <label for="xyrange">xyrange: </label>
+        <input id="xyrange" type="number" name="xyrange" step="0.1" value="30.0">
+
+        <label for="angle">angle (degree): </label>
+        <input id="angle" type="number" name="angle" step="1" value="30">
+
+        <label for="xyscale">xyscale: </label>
+        <input id="xyscale" type="number" name="xyscale" step="0.1" value="10.0">
+
+        <label for="zscale">zscale: </label>
+        <input id="zscale" type="number" name="zscale" step="0.1" value="128.0">
+    </div>
+
+    <div>
+        <label for="max-r">Max Red: </label>
+        <input id="max-r" type="number" name="max-r" value="255">
+
+        <label for="max-g">Max Green: </label>
+        <input id="max-g" type="number" name="max-g" value="0">
+
+        <label for="max-b">Max Blue: </label>
+        <input id="max-b" type="number" name="max-b" value="0">
+    </div>
+
+    <div>
+        <label for="min-r">Min Red: </label>
+        <input id="min-r" type="number" name="min-r" value="0">
+
+        <label for="min-g">Min Green: </label>
+        <input id="min-g" type="number" name="min-g" value="0">
+
+        <label for="min-b">Min Blue: </label>
+        <input id="min-b" type="number" name="min-b" value="255">
+    </div>
+
+    <input type="submit">
+</form>`
+
 func main() {
 	http.HandleFunc("/", diagramHandler)
 
@@ -133,7 +185,8 @@ func diagramHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	w.Header().Set("Content-Type", "image/svg+xml")
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprintf(w, formStr)
 	writeSvg(w, corners, width, height, maxY, minY, maxR, maxG, maxB, minR, minG, minB)
 }
 
