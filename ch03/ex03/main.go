@@ -64,7 +64,7 @@ func main() {
 		norm := (y - minY) / (maxY - minY)
 
 		fmt.Printf("<polygon points='%g,%g %g,%g %g,%g %g,%g' style='fill: rgba(%v,%v,%v,0.5); stroke-width: 0.3' />\n",
-			corner[0], corner[1], corner[2], corner[3], corner[4], corner[5], corner[6], corner[7], 255 * (1 - norm), 0, 255 * norm)
+			corner[0], corner[1], corner[2], corner[3], corner[4], corner[5], corner[6], corner[7], 255*(1-norm), 0, 255*norm)
 	}
 
 	fmt.Println("</svg>")
