@@ -39,8 +39,7 @@ func (c1 *BigRatComplex) Mul(c2 *BigRatComplex) *BigRatComplex {
 }
 
 func (c *BigRatComplex) Abs() float64 {
-	s, _ := (&big.Rat{}).SetFloat64(0).Abs(c.real).Float64()
-	t, _ := (&big.Rat{}).SetFloat64(0).Abs(c.imagine).Float64()
-
+	s, _ := c.real.Float64()
+	t, _ := c.imagine.Float64()
 	return math.Hypot(s, t)
 }
