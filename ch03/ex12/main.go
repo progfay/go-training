@@ -19,11 +19,5 @@ func isAnagram(str1, str2 string) bool {
 	sort.Slice(runes1, func(i, j int) bool { return runes1[i] < runes1[j] })
 	sort.Slice(runes2, func(i, j int) bool { return runes2[i] < runes2[j] })
 
-	for i, r := range runes1 {
-		if r != runes2[i] {
-			return false
-		}
-	}
-
-	return true
+	return string(runes1) == string(runes2)
 }
