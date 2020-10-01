@@ -1,0 +1,6 @@
+github.com/adonovan/gopl.io v0.0.0-20200323155855-65c318dde95e h1:GrPTZLVxgOE25aU8iIKpUcfHRCLOtmmeXz2IICKq1x4=
+github.com/adonovan/gopl.io v0.0.0-20200323155855-65c318dde95e/go.mod h1:7erdLbKa05flot22ZrWKCOvVtl28946R0+3QMpMyeh8=
+github.com/wayneashleyberry/terminal-dimensions v1.0.0 h1:LawtS1nqKjAfqrmKOzkcrDLAjSzh38lEhC401JPjQVA=
+github.com/wayneashleyberry/terminal-dimensions v1.0.0/go.mod h1:PW2XrtV6KmKOPhuf7wbtcmw1/IFnC39mryRET2XbxeE=
+gopl.io v0.0.0-20200323155855-65c318dde95e h1:Z2obUjDpRealS0n+wq0nZ0tAyl+vY1txRLsZ/EY7XNM=
+gopl.io v0.0.0-20200323155855-65c318dde95e/go.mod h1:k9MBtwj/WjioNgt7Buity/chxOPmJqkZ5bEaeT4JVm4=
