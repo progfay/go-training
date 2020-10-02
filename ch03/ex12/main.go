@@ -7,10 +7,10 @@ import (
 )
 
 func main() {
-	fmt.Println(isAnagram(os.Args[1], os.Args[2]))
+	fmt.Println(IsAnagram(os.Args[1], os.Args[2]))
 }
 
-func isAnagram(str1, str2 string) bool {
+func IsAnagram(str1, str2 string) bool {
 	runes1, runes2 := []rune(str1), []rune(str2)
 	if len(runes1) != len(runes2) {
 		return false
