@@ -50,17 +50,21 @@ func main() {
 	fmt.Println("</svg>")
 }
 
+func isValidFloat64(f float64) bool {
+	return !math.IsInf(f, 0) && !math.IsInf(f, -1) && !math.IsNaN(f)
+}
+
 func corner(i, j int) (float64, float64, error) {
 	x := xyrange * (float64(i)/cells - 0.5)
 	y := xyrange * (float64(j)/cells - 0.5)
 
 	z := f(x, y)
-	if math.IsInf(z, 0) || math.IsInf(z, -1) || math.IsNaN(z) {
-		return 0, 0, fmt.Errorf("Invalid float64 value (x, y, z): (%v, %v, %v)", x, y, z)
-	}
 
 	sx := width/2 + (x-y)*cos30*xyscale
 	sy := height/2 + (x+y)*sin30*xyscale - z*zscale
+	if !isValidFloat64(sx) || !isValidFloat64(sy) {
+		return 0, 0, fmt.Errorf("Invalid float64 value (sx, sy): (%v, %v)", sx, sy)
+	}
 	return sx, sy, nil
 }
 
