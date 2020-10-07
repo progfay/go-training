@@ -8,3 +8,6 @@ build: main.go
 
 run:
 	cat golang.html | ./main
+
+test:
+	go test -v -bench . -benchmem
