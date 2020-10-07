@@ -12,13 +12,13 @@ const (
 	BoilingC      Celsius = 100
 )
 
-const (
+var (
 	AbsoluteZeroF Fahrenheit = CToF(AbsoluteZeroC)
 	FreezingF     Fahrenheit = CToF(FreezingC)
 	BoilingF      Fahrenheit = CToF(BoilingC)
 )
 
-const (
+var (
 	AbsoluteZeroK Kelvin = CToK(AbsoluteZeroC)
 	FreezingK     Kelvin = CToK(FreezingC)
 	BoilingK      Kelvin = CToK(BoilingC)
