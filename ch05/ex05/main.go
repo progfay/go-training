@@ -53,10 +53,6 @@ func countWordsAndImages(n *html.Node) (words, images int) {
 		if n.Data == "img" {
 			images++
 		}
-		w, i := countWordsAndImages(n.NextSibling)
-		words, images = words+w, images+i
-		w, i = countWordsAndImages(n.FirstChild)
-		words, images = words+w, images+i
 
 	case html.TextNode:
 		scanner := bufio.NewScanner(strings.NewReader(n.Data))
@@ -66,5 +62,9 @@ func countWordsAndImages(n *html.Node) (words, images int) {
 		}
 	}
 
+	w, i := countWordsAndImages(n.NextSibling)
+	words, images = words+w, images+i
+	w, i = countWordsAndImages(n.FirstChild)
+	words, images = words+w, images+i
 	return
 }
