@@ -68,3 +68,5 @@ func countWordsAndImages(n *html.Node) (words, images int) {
 	words, images = words+w, images+i
 	return
 }
+
+var InternalCountWordsAndImages = countWordsAndImages

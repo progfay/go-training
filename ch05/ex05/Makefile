@@ -5,3 +5,6 @@ build: main.go
 
 run:
 	./main 'https://en.wikipedia.org/wiki/golang.html'
+
+test:
+	go test -v -bench . -benchmem
