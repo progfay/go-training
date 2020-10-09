@@ -12,11 +12,11 @@ import (
 
 func main() {
 	for _, url := range os.Args[1:] {
-		PrintPrettyHtml(os.Stdout, url)
+		printPrettyHtml(url)
 	}
 }
 
-func PrintPrettyHtml(w io.Writer, url string) error {
+func printPrettyHtml(url string) error {
 	resp, err := http.Get(url)
 	if err != nil {
 		return err
@@ -28,13 +28,16 @@ func PrintPrettyHtml(w io.Writer, url string) error {
 		return err
 	}
 
-	forEachNode(w, doc, 0, startElement, endElement)
+	forEachNode(os.Stdout, doc, 0, startElement, endElement)
 
 	return nil
 }
 
-func forEachNode(w io.Writer, n *html.Node, depth int, pre, post func(w io.Writer, n *html.Node, depth int) int) {
+func WritePrettyHtml(w io.Writer, doc *html.Node) {
+	forEachNode(w, doc, 0, startElement, endElement)
+}
 
+func forEachNode(w io.Writer, n *html.Node, depth int, pre, post func(w io.Writer, n *html.Node, depth int) int) {
 	if pre != nil {
 		depth = pre(w, n, depth)
 	}
@@ -61,7 +64,11 @@ func startElement(w io.Writer, n *html.Node, depth int) int {
 		for _, attr := range n.Attr {
 			attributes += fmt.Sprintf(" %s=%q", attr.Key, attr.Val)
 		}
-		fmt.Printf("%*s<%s%s>\n", depth*2, "", n.Data, attributes)
+		if n.FirstChild != nil {
+			fmt.Fprintf(w, "%*s<%s%s>\n", depth*2, "", n.Data, attributes)
+		} else {
+			fmt.Fprintf(w, "%*s<%s%s />\n", depth*2, "", n.Data, attributes)
+		}
 		depth++
 	}
 
@@ -71,7 +78,9 @@ func startElement(w io.Writer, n *html.Node, depth int) int {
 func endElement(w io.Writer, n *html.Node, depth int) int {
 	if n.Type == html.ElementNode {
 		depth--
-		fmt.Printf("%*s</%s>\n", depth*2, "", n.Data)
+		if n.FirstChild != nil {
+			fmt.Fprintf(w, "%*s</%s>\n", depth*2, "", n.Data)
+		}
 	}
 
 	return depth
