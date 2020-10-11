@@ -7,7 +7,7 @@ import (
 
 	"golang.org/x/net/html"
 
-	prettier "github.com/progfay/go-training/ch05/ex07"
+	"github.com/progfay/go-training/ch05/ex07/prettier"
 )
 
 var testcases = []struct {
