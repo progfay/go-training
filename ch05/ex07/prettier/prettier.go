@@ -13,6 +13,10 @@ func WritePrettyHtml(w io.Writer, doc *html.Node) {
 }
 
 func forEachNode(w io.Writer, n *html.Node, depth int, pre, post func(w io.Writer, n *html.Node, depth int) int) {
+	if n == nil {
+		return
+	}
+
 	if pre != nil {
 		depth = pre(w, n, depth)
 	}
