@@ -1,7 +1,9 @@
-package main
+package main_test
 
 import (
-	"fmt"
+	"testing"
+
+	topo "github.com/progfay/go-training/ch05/ex10"
 )
 
 var prereqs = map[string]map[string]bool{
@@ -23,32 +25,34 @@ var prereqs = map[string]map[string]bool{
 	"programming languages": {"data structures": true, "computer organization": true},
 }
 
-func main() {
-	for i, course := range TopoSort(prereqs) {
-		fmt.Printf("%d:\t%s\n", i+1, course)
-	}
+var testcases = []struct {
+	title string
+	in    map[string]map[string]bool
+}{
+	{
+		title: "empty",
+		in:    make(map[string]map[string]bool),
+	},
+	{
+		title: "prereqs",
+		in:    prereqs,
+	},
 }
 
-func TopoSort(m map[string]map[string]bool) []string {
-	var order []string
-	seen := make(map[string]bool)
-	var visitAll func(items map[string]bool)
-
-	visitAll = func(items map[string]bool) {
-		for item := range items {
-			if !seen[item] {
+func Test_TopoSort(t *testing.T) {
+	for _, testcase := range testcases {
+		t.Run(testcase.title, func(t *testing.T) {
+			seen := make(map[string]bool)
+			out := topo.TopoSort(testcase.in)
+			for _, item := range out {
+				for req := range testcase.in[item] {
+					if !seen[req] {
+						t.Errorf("invalid topological sorting: %q is required before %q", req, item)
+						return
+					}
+				}
 				seen[item] = true
-				visitAll(m[item])
-				order = append(order, item)
 			}
-		}
+		})
 	}
-
-	keys := make(map[string]bool)
-	for key := range m {
-		keys[key] = true
-	}
-
-	visitAll(keys)
-	return order
 }
