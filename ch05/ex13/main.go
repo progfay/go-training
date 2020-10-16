@@ -10,7 +10,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/progfay/go-training/ch05/ex07/prettier"
 	"github.com/progfay/go-training/ch05/ex13/links"
 	"golang.org/x/net/html"
 )
@@ -29,23 +28,29 @@ func breadthFirst(f func(item string) []string, worklist []string) {
 	}
 }
 
-func getDoc(urlString string) (*html.Node, *url.URL, error) {
+func curl(urlString string) (*bytes.Buffer, *url.URL, error) {
 	resp, err := http.Get(urlString)
 	if err != nil {
 		return nil, nil, err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		resp.Body.Close()
 		return nil, nil, fmt.Errorf("getting %s: %s", urlString, resp.Status)
 	}
 
-	doc, err := html.Parse(resp.Body)
-	resp.Body.Close()
+	var buf bytes.Buffer
+	io.Copy(&buf, resp.Body)
+
+	return &buf, resp.Request.URL, nil
+}
+
+func parseToDoc(buf *bytes.Buffer) (*html.Node, error) {
+	doc, err := html.Parse(buf)
 	if err != nil {
-		return nil, nil, fmt.Errorf("parsing %s as HTML: %v", urlString, err)
+		return nil, fmt.Errorf("fail html parsing: %v", err)
 	}
 
-	return doc, resp.Request.URL, nil
+	return doc, nil
 }
 
 func createFile(r io.Reader, path string) error {
@@ -71,15 +76,23 @@ func createFile(r io.Reader, path string) error {
 }
 
 func crawl(link string) []string {
-	doc, u, err := getDoc(link)
+	buf, u, err := curl(link)
 	if err != nil {
 		log.Print(err)
 		return []string{}
 	}
 
-	var buf bytes.Buffer
-	prettier.WritePrettyHtml(&buf, doc)
-	createFile(&buf, filepath.Join(u.Hostname(), u.Path))
+	err = createFile(bytes.NewBuffer(buf.Bytes()), filepath.Join(u.Hostname(), u.Path))
+	if err != nil {
+		log.Print(err)
+		return []string{}
+	}
+
+	doc, err := parseToDoc(bytes.NewBuffer(buf.Bytes()))
+	if err != nil {
+		log.Print(err)
+		return []string{}
+	}
 
 	hrefs := links.Extract(doc)
 	sameDomain := []string{}
