@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"syscall"
 
 	"github.com/progfay/go-training/ch05/ex13/links"
 	"golang.org/x/net/html"
@@ -53,12 +54,35 @@ func parseToDoc(buf *bytes.Buffer) (*html.Node, error) {
 	return doc, nil
 }
 
+func exists(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil
+}
+
 func createFile(r io.Reader, path string) error {
 	p := filepath.Join("dist", path)
+	if exists(p) {
+		p = filepath.Join(p, "#")
+	}
 	dir := filepath.Dir(p)
 	err := os.MkdirAll(dir, os.ModePerm)
 	if err != nil {
-		return err
+		err, ok := err.(*os.PathError)
+		if !ok || err.Err != syscall.ENOTDIR {
+			return err
+		}
+		if err := os.Rename(err.Path, err.Path+"#"); err != nil {
+			return err
+		}
+		if err := os.MkdirAll(err.Path, os.ModePerm); err != nil {
+			return err
+		}
+		if err := os.Rename(err.Path+"#", filepath.Join(err.Path, "#")); err != nil {
+			return err
+		}
+		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
+			return err
+		}
 	}
 
 	file, err := os.OpenFile(p, os.O_WRONLY|os.O_CREATE, os.ModePerm)
