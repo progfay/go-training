@@ -29,11 +29,17 @@ type IntSet struct {
 }
 
 func (s *IntSet) Has(x int) bool {
+	if x < 0 {
+		return false
+	}
 	word, bit := x/64, uint(x%64)
 	return word < len(s.words) && s.words[word]&(1<<bit) != 0
 }
 
 func (s *IntSet) Add(x int) {
+	if x < 0 {
+		panic("add negative integer to IntSet")
+	}
 	word, bit := x/64, uint(x%64)
 	for word >= len(s.words) {
 		s.words = append(s.words, 0)
@@ -80,6 +86,9 @@ func (s *IntSet) Len() int {
 }
 
 func (s *IntSet) Remove(x int) {
+	if x < 0 {
+		return
+	}
 	word, bit := x/64, uint(x%64)
 	for word >= len(s.words) {
 		s.words = append(s.words, 0)
@@ -88,15 +97,15 @@ func (s *IntSet) Remove(x int) {
 }
 
 func (s *IntSet) Clear() {
-	for i := 0; i < len(s.words); i++ {
-		s.words[i] = 0
-	}
+	s.words = nil
 }
 
 func (s *IntSet) Copy() *IntSet {
-	copied := IntSet{}
-	for i, word := range s.words {
-		copied.words[i] = word
+	ret := &IntSet{}
+	if s.words == nil {
+		return ret
 	}
-	return &copied
+	ret.words = make([]uint64, len(s.words))
+	copy(ret.words, s.words)
+	return ret
 }
