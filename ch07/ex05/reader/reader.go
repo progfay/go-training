@@ -23,8 +23,9 @@ func (lr *limitReader) Read(p []byte) (n int, err error) {
 		return 0, io.EOF
 	}
 	n, err = lr.r.Read(p)
-	p = p[lr.i:lr.l]
-	n = int(lr.l - lr.i)
-	lr.i = lr.l
+	if int64(n) > lr.l {
+		n = copy(p, p[lr.i:lr.l])
+		lr.i = lr.l
+	}
 	return
 }
