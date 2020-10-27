@@ -7,7 +7,7 @@ import (
 	"github.com/progfay/go-training/ch07/ex13/eval"
 )
 
-func Test_tree_String(t *testing.T) {
+func Test_Expr_String(t *testing.T) {
 	for _, testcase := range []string{
 		"-1 - x",
 		"-1 + -x",
