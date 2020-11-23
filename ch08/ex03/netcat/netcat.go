@@ -24,7 +24,7 @@ func main() {
 		done <- struct{}{}
 	}()
 	mustCopy(c, os.Stdin)
-	c.Close()
+	c.CloseWrite()
 	<-done
 }
 
