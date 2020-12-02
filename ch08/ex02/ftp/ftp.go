@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"strings"
 )
 
 type ftpServer struct {
@@ -49,9 +50,37 @@ func (s *ftpServer) Cancel() <-chan struct{} {
 
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
+
 	input := bufio.NewScanner(conn)
-	log.Println(input)
+	fmt.Fprintln(conn, 220)
+
 	for input.Scan() {
-		fmt.Println(input.Text())
+		req := parse(input.Text())
+		fmt.Printf("%#v\n", req)
+	}
+}
+
+type request struct {
+	command string
+	message string
+}
+
+func parse(text string) request {
+	s := strings.SplitN(text, " ", 2)
+
+	switch len(s) {
+	case 0:
+		return request{}
+
+	case 1:
+		return request{
+			command: s[0],
+		}
+
+	default:
+		return request{
+			command: s[0],
+			message: s[1],
+		}
 	}
 }
