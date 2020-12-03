@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"strings"
 )
 
 type ftpServer struct {
@@ -53,34 +52,12 @@ func handleConnection(conn net.Conn) {
 
 	input := bufio.NewScanner(conn)
 	fmt.Fprintln(conn, 220)
+	s := newState()
 
 	for input.Scan() {
 		req := parse(input.Text())
-		fmt.Printf("%#v\n", req)
-	}
-}
-
-type request struct {
-	command string
-	message string
-}
-
-func parse(text string) request {
-	s := strings.SplitN(text, " ", 2)
-
-	switch len(s) {
-	case 0:
-		return request{}
-
-	case 1:
-		return request{
-			command: s[0],
-		}
-
-	default:
-		return request{
-			command: s[0],
-			message: s[1],
-		}
+		res := s.handle(req)
+		log.Println(req, res)
+		fmt.Fprintf(conn, "%s\r\n.", res.String())
 	}
 }
