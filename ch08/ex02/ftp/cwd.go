@@ -22,7 +22,7 @@ func (cwd *Cwd) Pwd() string {
 func (cwd *Cwd) Cd(path string) error {
 	var p string
 	if filepath.IsAbs(path) {
-		cwd.path = path
+		p = path
 	} else {
 		p = filepath.Join(cwd.path, path)
 	}
@@ -70,4 +70,23 @@ func (cwd *Cwd) Ls(path string) ([]os.FileInfo, error) {
 	}
 
 	return ioutil.ReadDir(p)
+}
+
+func (cwd *Cwd) Get(path string) ([]byte, error) {
+	var p string
+	if filepath.IsAbs(path) {
+		p = path
+	} else {
+		p = filepath.Join(cwd.path, path)
+	}
+
+	info, err := os.Stat(p)
+	if err != nil {
+		return nil, err
+	}
+	if info.IsDir() {
+		return nil, fmt.Errorf("not file: %q", p)
+	}
+
+	return ioutil.ReadFile(p)
 }

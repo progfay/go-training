@@ -93,8 +93,15 @@ func (s *state) handle(conn *ftpConn, req request) response {
 	case "SYST":
 		return newResponse(fmt.Sprintf(nameSystemType, "UNIX"))
 
-	case "GET":
-		return newResponse(wrongArguments)
+	case "RETR":
+		bytes, err := s.cwd.Get(req.message)
+		if err != nil {
+			log.Println(err)
+			return newResponse(wrongArguments)
+		}
+		res := newResponse(fileStatusOk)
+		res.SetData(string(bytes))
+		return res
 
 	case "SET":
 		return newResponse(wrongArguments)
