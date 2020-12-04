@@ -1,6 +1,7 @@
 package ftp
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -19,13 +20,24 @@ func (cwd *Cwd) Pwd() string {
 	return cwd.path
 }
 
-func (cwd *Cwd) Cd(path string) {
+func (cwd *Cwd) Cd(path string) error {
+	var p string
 	if filepath.IsAbs(path) {
 		cwd.path = path
-		return
+	} else {
+		p = filepath.Join(cwd.path, path)
 	}
 
-	cwd.path = filepath.Join(cwd.path, path)
+	info, err := os.Stat(p)
+	if err != nil {
+		return err
+	}
+	if !info.IsDir() {
+		return fmt.Errorf("not directory: %q", p)
+	}
+
+	cwd.path = p
+	return nil
 }
 
 func (cwd *Cwd) Stat(path string) (os.FileInfo, error) {

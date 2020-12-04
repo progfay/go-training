@@ -76,7 +76,10 @@ func (s *state) handle(conn *ftpConn, req request) response {
 		return res
 
 	case "CWD":
-		s.cwd.Cd(req.message)
+		err := s.cwd.Cd(req.message)
+		if err != nil {
+			return newResponse(wrongArguments)
+		}
 		return newResponse(fileActionOk)
 
 	case "PWD":
@@ -88,8 +91,12 @@ func (s *state) handle(conn *ftpConn, req request) response {
 	case "SYST":
 		return newResponse(fmt.Sprintf(nameSystemType, "UNIX"))
 
-		// case "TYPE":
-		// case "MODE":
+	case "GET":
+		return newResponse(wrongArguments)
+
+	case "SET":
+		return newResponse(wrongArguments)
+
 		// case "STRU":
 		// case "RETR":
 		// case "STOR":
