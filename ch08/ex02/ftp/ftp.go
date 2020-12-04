@@ -59,8 +59,8 @@ func handleConnection(c net.Conn) {
 		req := parse(input.Text())
 		res := s.handle(&conn, req)
 		log.Printf("%#v %#v", req, res)
-		res.Send(conn)
-		if res.message == closingControlConnection {
+		conn.Reply(res)
+		if res.closing {
 			break
 		}
 	}

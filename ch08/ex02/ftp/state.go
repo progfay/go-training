@@ -96,7 +96,9 @@ func (s *state) handle(conn *ftpConn, req request) response {
 		// case "NOOP":
 
 	case "QUIT":
-		return newResponse(closingControlConnection)
+		res := newResponse(closingControlConnection)
+		res.closing = true
+		return res
 
 	case "FEAT", "EPSV", "PASV":
 		return newResponse(notImplemented)

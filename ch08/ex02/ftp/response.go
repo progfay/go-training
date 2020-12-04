@@ -1,9 +1,5 @@
 package ftp
 
-import (
-	"fmt"
-)
-
 const (
 	restartMarkerReply         = "110 Restart marker reply."
 	readyInMinutes             = "120 Service ready in nnn minutes."
@@ -50,6 +46,7 @@ type response struct {
 	message string
 	data    string
 	hasData bool
+	closing bool
 }
 
 func newResponse(message string) response {
@@ -59,14 +56,4 @@ func newResponse(message string) response {
 func (res *response) SetData(data string) {
 	res.hasData = true
 	res.data = data
-}
-
-func (res *response) Send(conn ftpConn) {
-	fmt.Fprintf(conn.ctrlConn, "%s\n", res.message)
-
-	if res.hasData {
-		fmt.Fprintf(conn.dataConn, "%s\r\n", res.data)
-		conn.dataConn.Close()
-		fmt.Fprintf(conn.ctrlConn, "%s\n", closingDataConnection)
-	}
 }

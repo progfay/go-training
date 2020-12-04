@@ -19,3 +19,13 @@ func newftpConn(ctrlConn net.Conn) ftpConn {
 func (conn *ftpConn) Write(msg string) {
 	fmt.Fprintf(conn.ctrlConn, msg)
 }
+
+func (conn *ftpConn) Reply(res response) {
+	fmt.Fprintf(conn.ctrlConn, "%s\n", res.message)
+
+	if res.hasData {
+		fmt.Fprintf(conn.dataConn, "%s\r\n", res.data)
+		conn.dataConn.Close()
+		fmt.Fprintf(conn.ctrlConn, "%s\n", closingDataConnection)
+	}
+}
