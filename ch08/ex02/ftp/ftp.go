@@ -57,8 +57,8 @@ func handleConnection(c net.Conn) {
 
 	for input.Scan() {
 		req := parse(input.Text())
-		res := s.handle(conn, req)
-		log.Printf("%q %q", req.String(), res.String())
-		conn.Write(fmt.Sprintln(res.String()))
+		res := s.handle(&conn, req)
+		log.Printf("%#v %#v", req, res)
+		res.Send(conn)
 	}
 }

@@ -2,7 +2,6 @@ package ftp
 
 import (
 	"fmt"
-	"strings"
 )
 
 type responseCode int
@@ -51,18 +50,32 @@ const (
 type response struct {
 	code    responseCode
 	message string
+	data    string
+	hasData bool
 }
 
-func newResponse(code responseCode, messages ...string) response {
+func newResponse(code responseCode, message string) response {
 	return response{
 		code:    code,
-		message: strings.Join(messages, " "),
+		message: message,
 	}
 }
 
-func (res *response) String() string {
+func (res *response) SetData(data string) {
+	res.hasData = true
+	res.data = data
+}
+
+func (res *response) Send(conn ftpConn) {
 	if res.message == "" {
-		return fmt.Sprint(res.code)
+		fmt.Fprintf(conn.ctrlConn, "%d\n", res.code)
+	} else {
+		fmt.Fprintf(conn.ctrlConn, "%d %s\n", res.code, res.message)
 	}
-	return fmt.Sprintf("%d %s", res.code, res.message)
+
+	if res.hasData {
+		fmt.Fprintf(conn.dataConn, "%s\r\n", res.data)
+		conn.dataConn.Close()
+		fmt.Fprintf(conn.ctrlConn, "%d\n", closingDataConnection)
+	}
 }
