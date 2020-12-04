@@ -3,7 +3,6 @@ package ftp
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 )
@@ -60,8 +59,6 @@ func (cwd *Cwd) Ls(path string) ([]os.FileInfo, error) {
 	default:
 		p = filepath.Join(cwd.path, path)
 	}
-
-	log.Println(p)
 
 	info, err := os.Stat(p)
 	if err != nil {

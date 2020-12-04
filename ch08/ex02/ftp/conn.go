@@ -20,12 +20,14 @@ func (conn *ftpConn) Write(msg string) {
 	fmt.Fprintf(conn.ctrlConn, msg)
 }
 
-func (conn *ftpConn) Reply(res response) {
+func (conn *ftpConn) Reply(s state, res response) {
+	fmt.Printf("%s <<< %s\n", s.name, res.String())
 	fmt.Fprintf(conn.ctrlConn, "%s\n", res.message)
 
 	if res.hasData {
 		fmt.Fprintf(conn.dataConn, "%s\r\n", res.data)
 		conn.dataConn.Close()
+		fmt.Printf("%s <<< %s\n", s.name, closingControlConnection)
 		fmt.Fprintf(conn.ctrlConn, "%s\n", closingDataConnection)
 	}
 }

@@ -27,6 +27,8 @@ func newState() state {
 }
 
 func (s *state) handle(conn *ftpConn, req request) response {
+	fmt.Printf("%s >>> %s\n", s.name, req.String())
+
 	switch req.command {
 	case "USER":
 		s.name = req.message
@@ -60,7 +62,7 @@ func (s *state) handle(conn *ftpConn, req request) response {
 		conn.dataConn = dataConn
 		return newResponse(ok)
 
-	case "LIST":
+	case "LIST", "NLST":
 		files, err := s.cwd.Ls(req.message)
 		if err != nil {
 			log.Println(err)

@@ -57,3 +57,7 @@ func (res *response) SetData(data string) {
 	res.hasData = true
 	res.data = data
 }
+
+func (res *response) String() string {
+	return res.message
+}
