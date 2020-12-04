@@ -35,8 +35,6 @@ func (s *state) handle(conn *ftpConn, req request) response {
 	case "PASS":
 		return newResponse(userLoggedIn, "")
 
-	// case "QUIT":
-
 	case "PORT":
 		hostPort := strings.Split(req.message, ",")
 		if len(hostPort) != 6 {
@@ -81,15 +79,21 @@ func (s *state) handle(conn *ftpConn, req request) response {
 		s.cwd.Cd(req.message)
 		return newResponse(fileActionOk, "")
 
+	case "PWD":
+		return newResponse(created, fmt.Sprintf("%q is the  current directory", s.cwd.Pwd()))
+
 	case "SYST":
 		return newResponse(nameSystemType, "UNIX")
 
-	// case "TYPE":
-	// case "MODE":
-	// case "STRU":
-	// case "RETR":
-	// case "STOR":
-	// case "NOOP":
+		// case "TYPE":
+		// case "MODE":
+		// case "STRU":
+		// case "RETR":
+		// case "STOR":
+		// case "NOOP":
+
+	case "QUIT":
+		return newResponse(closingControlConnection, "")
 
 	case "FEAT", "EPSV", "PASV":
 		return newResponse(notImplemented, "")

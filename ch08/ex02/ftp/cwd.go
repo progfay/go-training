@@ -15,6 +15,10 @@ func newCwd() Cwd {
 	return Cwd{path: os.Getenv("HOME")}
 }
 
+func (cwd *Cwd) Pwd() string {
+	return cwd.path
+}
+
 func (cwd *Cwd) Cd(path string) {
 	if filepath.IsAbs(path) {
 		cwd.path = path

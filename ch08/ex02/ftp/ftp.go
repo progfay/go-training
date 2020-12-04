@@ -60,5 +60,8 @@ func handleConnection(c net.Conn) {
 		res := s.handle(&conn, req)
 		log.Printf("%#v %#v", req, res)
 		res.Send(conn)
+		if res.code == closingControlConnection {
+			break
+		}
 	}
 }
