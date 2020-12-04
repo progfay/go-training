@@ -103,13 +103,11 @@ func (s *state) handle(conn *ftpConn, req request) response {
 		res.SetData(string(bytes))
 		return res
 
-	case "SET":
+	case "STOR":
 		return newResponse(wrongArguments)
 
-		// case "STRU":
-		// case "RETR":
-		// case "STOR":
-		// case "NOOP":
+	case "NOOP":
+		return newResponse(ok)
 
 	case "QUIT":
 		res := newResponse(closingControlConnection)
