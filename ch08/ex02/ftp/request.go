@@ -31,5 +31,8 @@ func parse(text string) request {
 }
 
 func (req *request) String() string {
+	if req.message == "" {
+		return req.command
+	}
 	return fmt.Sprintf("%s %s", req.command, req.message)
 }

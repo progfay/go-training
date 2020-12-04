@@ -47,17 +47,18 @@ func (s *ftpServer) Cancel() <-chan struct{} {
 	return s.close
 }
 
-func handleConnection(conn net.Conn) {
-	defer conn.Close()
+func handleConnection(c net.Conn) {
+	defer c.Close()
 
-	input := bufio.NewScanner(conn)
-	fmt.Fprintln(conn, 220)
+	input := bufio.NewScanner(c)
+	fmt.Fprintln(c, 220)
 	s := newState()
+	conn := newftpConn(c)
 
 	for input.Scan() {
 		req := parse(input.Text())
-		res := s.handle(req)
-		log.Println(req, res)
-		fmt.Fprintf(conn, "%s\r\n.", res.String())
+		res := s.handle(conn, req)
+		log.Printf("%q %q", req.String(), res.String())
+		conn.Write(fmt.Sprintln(res.String()))
 	}
 }

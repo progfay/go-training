@@ -49,17 +49,20 @@ const (
 )
 
 type response struct {
-	code responseCode
-	msg  string
+	code    responseCode
+	message string
 }
 
-func newResponse(code responseCode, msgs ...string) response {
+func newResponse(code responseCode, messages ...string) response {
 	return response{
-		code: code,
-		msg:  strings.Join(msgs, " "),
+		code:    code,
+		message: strings.Join(messages, " "),
 	}
 }
 
 func (res *response) String() string {
-	return fmt.Sprintf("%d", res.code)
+	if res.message == "" {
+		return fmt.Sprint(res.code)
+	}
+	return fmt.Sprintf("%d %s", res.code, res.message)
 }
