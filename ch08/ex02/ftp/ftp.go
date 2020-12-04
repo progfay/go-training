@@ -51,7 +51,7 @@ func handleConnection(c net.Conn) {
 	defer c.Close()
 
 	input := bufio.NewScanner(c)
-	fmt.Fprintln(c, 220)
+	fmt.Fprintln(c, readyForNewUser)
 	s := newState()
 	conn := newftpConn(c)
 
@@ -60,7 +60,7 @@ func handleConnection(c net.Conn) {
 		res := s.handle(&conn, req)
 		log.Printf("%#v %#v", req, res)
 		res.Send(conn)
-		if res.code == closingControlConnection {
+		if res.message == closingControlConnection {
 			break
 		}
 	}

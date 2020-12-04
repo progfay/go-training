@@ -4,61 +4,56 @@ import (
 	"fmt"
 )
 
-type responseCode int
-
 const (
-	restartmarkerReplay        responseCode = 110
-	readyInMinutes             responseCode = 120
-	alreadyOpen                responseCode = 125
-	fileStatusOk               responseCode = 150
-	ok                         responseCode = 200
-	notImplementedAtThisSite   responseCode = 202
-	systemStatus               responseCode = 211
-	directoryStatus            responseCode = 212
-	fileStatus                 responseCode = 213
-	helpMessage                responseCode = 214
-	nameSystemType             responseCode = 215
-	readyForNewUser            responseCode = 220
-	closingControlConnection   responseCode = 221
-	connectionOpen             responseCode = 225
-	closingDataConnection      responseCode = 226
-	enteringPassiveMode        responseCode = 227
-	userLoggedIn               responseCode = 230
-	fileActionOk               responseCode = 250
-	created                    responseCode = 257
-	needPassword               responseCode = 331
-	needAccountForLogin        responseCode = 332
-	peding                     responseCode = 350
-	localError                 responseCode = 351
-	notAvailable               responseCode = 421
-	cantOpenConnection         responseCode = 425
-	connectionClosed           responseCode = 426
-	unavailableFile            responseCode = 450
-	wrongCommand               responseCode = 500
-	wrongArguments             responseCode = 501
-	notImplemented             responseCode = 502
-	badSequence                responseCode = 503
-	notImplementedForParameter responseCode = 504
-	notLoggedIn                responseCode = 530
-	needAccountForStoringFiles responseCode = 532
-	fileNotFound               responseCode = 550
-	unknownPageType            responseCode = 551
-	notEnoughSpace             responseCode = 552
-	disallowedFileName         responseCode = 553
+	restartMarkerReply         = "110 Restart marker reply."
+	readyInMinutes             = "120 Service ready in nnn minutes."
+	alreadyOpen                = "125 Data connection already open; transfer starting."
+	fileStatusOk               = "150 File status okay; about to open data connection."
+	ok                         = "200 Command okay."
+	notImplementedAtThisSite   = "202 Command not implemented, superfluous at this site."
+	systemStatus               = "211 System status, or system help reply."
+	directoryStatus            = "212 Directory status."
+	fileStatus                 = "213 File status."
+	helpMessage                = "214 Help message."
+	nameSystemType             = "215 %s system type."
+	readyForNewUser            = "220 Service ready for new user."
+	closingControlConnection   = "221 Service closing control connection."
+	connectionOpen             = "225 Data connection open; no transfer in progress."
+	closingDataConnection      = "226 Closing data connection."
+	enteringPassiveMode        = "227 Entering Passive Mode (%s)."
+	userLoggedIn               = "230 User logged in, proceed."
+	fileActionOk               = "250 Requested file action okay, completed."
+	created                    = "257 %q created."
+	needPassword               = "331 User name okay, need password."
+	needAccountForLogin        = "332 Need account for login."
+	peding                     = "350 Requested file action pending further information."
+	localError                 = "421 Service not available, closing control connection."
+	notAvailable               = "425 Can't open data connection."
+	cantOpenConnection         = "426 Connection closed; transfer aborted."
+	connectionClosed           = "450 Requested file action not taken."
+	localErrorrInProcessing    = "451 Requested action aborted: local error in processing."
+	unavailableFile            = "452 Requested action not taken."
+	wrongCommand               = "500 Syntax error, command unrecognized."
+	wrongArguments             = "501 Syntax error in parameters or arguments."
+	notImplemented             = "502 Command not implemented."
+	badSequence                = "503 Bad sequence of commands."
+	notImplementedForParameter = "504 Command not implemented for that parameter."
+	notLoggedIn                = "530 Not logged in."
+	needAccountForStoringFiles = "532 Need account for storing files."
+	fileNotFound               = "550 Requested action not taken."
+	unknownPageType            = "551 Requested action aborted: page type unknown."
+	notEnoughSpace             = "552 Requested file action aborted."
+	disallowedFileName         = "553 Requested action not taken."
 )
 
 type response struct {
-	code    responseCode
 	message string
 	data    string
 	hasData bool
 }
 
-func newResponse(code responseCode, message string) response {
-	return response{
-		code:    code,
-		message: message,
-	}
+func newResponse(message string) response {
+	return response{message: message}
 }
 
 func (res *response) SetData(data string) {
@@ -67,15 +62,11 @@ func (res *response) SetData(data string) {
 }
 
 func (res *response) Send(conn ftpConn) {
-	if res.message == "" {
-		fmt.Fprintf(conn.ctrlConn, "%d\n", res.code)
-	} else {
-		fmt.Fprintf(conn.ctrlConn, "%d %s\n", res.code, res.message)
-	}
+	fmt.Fprintf(conn.ctrlConn, "%s\n", res.message)
 
 	if res.hasData {
 		fmt.Fprintf(conn.dataConn, "%s\r\n", res.data)
 		conn.dataConn.Close()
-		fmt.Fprintf(conn.ctrlConn, "%d\n", closingDataConnection)
+		fmt.Fprintf(conn.ctrlConn, "%s\n", closingDataConnection)
 	}
 }
