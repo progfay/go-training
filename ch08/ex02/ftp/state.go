@@ -63,7 +63,26 @@ func (s *state) handle(conn *ftpConn, req request) response {
 		conn.dataConn = dataConn
 		return newResponse(ok)
 
-	case "LIST", "NLST":
+	case "LIST":
+		files, err := s.cwd.Ls(req.message)
+		if err != nil {
+			log.Println(err)
+			return newResponse(wrongArguments)
+		}
+
+		lines := []string{}
+		for _, file := range files {
+			fileType := "file"
+			if file.IsDir() {
+				fileType = "dir "
+			}
+			lines = append(lines, fmt.Sprintf("%s\t%d\t%s\t%s", file.Mode(), file.Size(), fileType, file.Name()))
+		}
+		res := newResponse(fileStatusOk)
+		res.SetData(strings.Join(lines, "\r\n"))
+		return res
+
+	case "NLST":
 		files, err := s.cwd.Ls(req.message)
 		if err != nil {
 			log.Println(err)
