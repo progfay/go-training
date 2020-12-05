@@ -90,3 +90,23 @@ func (cwd *Cwd) Get(path string) ([]byte, error) {
 
 	return ioutil.ReadFile(p)
 }
+
+func (cwd *Cwd) Put(path string, data []byte) error {
+	var p string
+	if filepath.IsAbs(path) {
+		p = path
+	} else {
+		p = filepath.Join(cwd.path, path)
+	}
+
+	info, err := os.Stat(p)
+	if err != nil && !os.IsNotExist(err) {
+		return err
+	}
+
+	if info != nil && info.IsDir() {
+		return fmt.Errorf("not file: %q", p)
+	}
+
+	return ioutil.WriteFile(p, data, os.ModePerm)
+}

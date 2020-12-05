@@ -2,6 +2,7 @@ package ftp
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
 	"strconv"
@@ -94,17 +95,28 @@ func (s *state) handle(conn *ftpConn, req request) response {
 		return newResponse(fmt.Sprintf(nameSystemType, "UNIX"))
 
 	case "RETR":
-		bytes, err := s.cwd.Get(req.message)
+		data, err := s.cwd.Get(req.message)
 		if err != nil {
 			log.Println(err)
 			return newResponse(wrongArguments)
 		}
 		res := newResponse(fileStatusOk)
-		res.SetData(string(bytes))
+		res.SetData(string(data))
 		return res
 
 	case "STOR":
-		return newResponse(wrongArguments)
+		conn.Reply(*s, newResponse(fileStatusOk))
+		data, err := ioutil.ReadAll(conn.dataConn)
+		if err != nil {
+			log.Println(err)
+			return newResponse(wrongArguments)
+		}
+		err = s.cwd.Put(req.message, data)
+		if err != nil {
+			log.Println(err)
+			return newResponse(wrongArguments)
+		}
+		return newResponse(closingDataConnection)
 
 	case "NOOP":
 		return newResponse(ok)
