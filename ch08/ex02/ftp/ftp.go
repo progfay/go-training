@@ -52,15 +52,14 @@ func handleConnection(c net.Conn) {
 
 	input := bufio.NewScanner(c)
 	fmt.Fprintln(c, readyForNewUser)
-	s := newState()
 	conn := newftpConn(c)
 
 	for input.Scan() {
 		req := parse(input.Text())
 
 		fmt.Println()
-		res := s.handle(&conn, req)
-		conn.Reply(s, res)
+		res := conn.handle(req)
+		conn.Reply(res)
 		if res.closing {
 			break
 		}
