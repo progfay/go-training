@@ -7,6 +7,7 @@ import (
 	"os"
 	"sort"
 
+	"github.com/progfay/go-training/ch10/ex04/has"
 	"github.com/progfay/go-training/ch10/ex04/list"
 	"golang.org/x/sync/errgroup"
 )
@@ -56,35 +57,8 @@ func main() {
 
 	for _, pkg := range allPkgs {
 		sort.Strings(pkg.Deps)
-		if hasDuplicate(deps, pkg.Deps) {
+		if has.Duplicate(deps, pkg.Deps) {
 			fmt.Println(pkg.ImportPath)
-		}
-	}
-}
-
-// hasDuplicate detect duplication of string slice
-// Arguments slices must be sorted
-func hasDuplicate(left, right []string) bool {
-	var (
-		ll, rl = len(left), len(right)
-		li, ri = 0, 0
-	)
-
-	for {
-		if ll <= li || rl <= ri {
-			return false
-		}
-
-		l, r := left[li], right[ri]
-		switch {
-		case l == r:
-			return true
-
-		case l < r:
-			li++
-
-		case l > r:
-			ri++
 		}
 	}
 }
