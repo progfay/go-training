@@ -13,17 +13,6 @@ func init() {
 	}
 }
 
-func popCount(x uint64) int {
-	return int(pc[byte(x>>(0*8))] +
-		pc[byte(x>>(1*8))] +
-		pc[byte(x>>(2*8))] +
-		pc[byte(x>>(3*8))] +
-		pc[byte(x>>(4*8))] +
-		pc[byte(x>>(5*8))] +
-		pc[byte(x>>(6*8))] +
-		pc[byte(x>>(7*8))])
-}
-
 type IntSet struct {
 	words []uint64
 }
@@ -38,7 +27,7 @@ func (s *IntSet) Has(x int) bool {
 	if x < 0 {
 		return false
 	}
-	word, bit := x/64, uint(x%64)
+	word, bit := x>>6, x&0x3F
 	return word < len(s.words) && s.words[word]&(1<<bit) != 0
 }
 
@@ -46,7 +35,7 @@ func (s *IntSet) Add(x int) {
 	if x < 0 {
 		panic("add negative integer to IntSet")
 	}
-	word, bit := x/64, uint(x%64)
+	word, bit := x>>6, x&0x3F
 	for word >= len(s.words) {
 		s.words = append(s.words, 0)
 	}
@@ -76,7 +65,7 @@ func (s *IntSet) String() string {
 func (s *IntSet) Len() int {
 	count := 0
 	for _, word := range s.words {
-		count += popCount(word)
+		count += int(pc[word])
 	}
 	return count
 }
@@ -85,7 +74,7 @@ func (s *IntSet) Remove(x int) {
 	if x < 0 {
 		return
 	}
-	word, bit := x/64, uint(x%64)
+	word, bit := x>>6, x&0x3F
 	for word >= len(s.words) {
 		s.words = append(s.words, 0)
 	}
