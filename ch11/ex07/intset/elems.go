@@ -7,7 +7,7 @@ func (s *IntSet) Elems() []int {
 		bit := 0
 		for word > 0 {
 			if word&1 != 0 {
-				elems = append(elems, i<<16+bit)
+				elems = append(elems, i*64+bit)
 			}
 			bit++
 			word >>= 1
