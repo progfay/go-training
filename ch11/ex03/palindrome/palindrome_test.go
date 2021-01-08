@@ -26,7 +26,7 @@ func randomNonPalindrome(rng *rand.Rand) string {
 	runes := make([]rune, n)
 	for i := 0; i < (n+1)/2; i++ {
 		r1 := rune(rng.Intn(0x0800))
-		r2 := rune(rng.Intn(0x0800))
+		r2 := rune(rng.Intn(0x0800-1)) + 1
 		runes[i] = r1
 		runes[n-1-i] = r1 + r2
 	}
