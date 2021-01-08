@@ -14,12 +14,12 @@ func init() {
 }
 
 type IntSet struct {
-	words []uint8
+	words []uint16
 }
 
 func New() *IntSet {
 	s := &IntSet{}
-	s.words = make([]uint8, 0)
+	s.words = make([]uint16, 0)
 	return s
 }
 
@@ -27,7 +27,7 @@ func (s *IntSet) Has(x int) bool {
 	if x < 0 {
 		return false
 	}
-	word, bit := x>>6, x&0x3F
+	word, bit := x>>16, x&0xFFFF
 	return word < len(s.words) && s.words[word]&(1<<bit) != 0
 }
 
@@ -35,7 +35,7 @@ func (s *IntSet) Add(x int) {
 	if x < 0 {
 		panic("add negative integer to IntSet")
 	}
-	word, bit := x>>6, x&0x3F
+	word, bit := x>>16, x&0xFFFF
 	for word >= len(s.words) {
 		s.words = append(s.words, 0)
 	}
@@ -65,7 +65,8 @@ func (s *IntSet) String() string {
 func (s *IntSet) Len() int {
 	count := 0
 	for _, word := range s.words {
-		count += pc[word]
+		l, r := word>>8, word&0xFFFF
+		count += pc[l] + pc[r]
 	}
 	return count
 }
@@ -74,7 +75,7 @@ func (s *IntSet) Remove(x int) {
 	if x < 0 {
 		return
 	}
-	word, bit := x>>6, x&0x3F
+	word, bit := x>>16, x&0xFFFF
 	for word >= len(s.words) {
 		s.words = append(s.words, 0)
 	}
@@ -90,7 +91,7 @@ func (s *IntSet) Copy() *IntSet {
 	if s.words == nil {
 		return ret
 	}
-	ret.words = make([]uint8, len(s.words))
+	ret.words = make([]uint16, len(s.words))
 	copy(ret.words, s.words)
 	return ret
 }
