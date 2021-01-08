@@ -29,7 +29,12 @@ func teller() {
 			balance += amount
 
 		case amount := <-withdraws:
-			available <- balance >= amount
+			if balance < amount {
+				available <- false
+			} else {
+				balance -= amount
+				available <- true
+			}
 
 		case balances <- balance:
 		}
