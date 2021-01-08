@@ -60,7 +60,7 @@ func (conn *ftpConn) Reply(res response) {
 	fmt.Fprintf(conn.ctrlConn, "%s\n", res.message)
 
 	if res.hasData {
-		fmt.Fprintf(conn.dataConn, "%s\r\n", res.data)
+		fmt.Fprint(conn.dataConn, res.data)
 		conn.dataConn.Close()
 		fmt.Printf("%s <<< %s\n", conn.state.name, closingControlConnection)
 		fmt.Fprintf(conn.ctrlConn, "%s\n", closingDataConnection)
