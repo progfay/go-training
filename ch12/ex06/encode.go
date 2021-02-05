@@ -63,8 +63,7 @@ func encode(buf *bytes.Buffer, v reflect.Value) error {
 		buf.WriteByte('{')
 		isFirst := true
 		for i := 0; i < v.NumField(); i++ {
-			zero := reflect.Zero(v.Field(i).Type()).Interface()
-			if reflect.DeepEqual(v.Field(i).Interface(), zero) {
+			if v.Field(i).IsZero() {
 				continue
 			}
 			if !isFirst {
@@ -83,8 +82,7 @@ func encode(buf *bytes.Buffer, v reflect.Value) error {
 		buf.WriteByte('{')
 		isFirst := true
 		for _, key := range v.MapKeys() {
-			zero := reflect.Zero(v.MapIndex(key).Type())
-			if reflect.DeepEqual(v.MapIndex(key).Interface(), zero) {
+			if v.MapIndex(key).IsZero() {
 				continue
 			}
 			if !isFirst {
