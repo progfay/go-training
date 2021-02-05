@@ -13,6 +13,7 @@ func Test_Marshal(t *testing.T) {
 		Actor           map[string]string
 		Oscars          []string
 		Sequel          *string
+		Flag            bool
 	}
 	in := Movie{
 		Title:    "Dr. Strangelove",
@@ -32,6 +33,7 @@ func Test_Marshal(t *testing.T) {
 			"Best Director (Nomin.)",
 			"Best Picture (Nomin.)",
 		},
+		Flag: true,
 	}
 
 	jsonBytes, err := Marshal(in)

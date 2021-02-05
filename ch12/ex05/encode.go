@@ -20,11 +20,7 @@ func encode(buf *bytes.Buffer, v reflect.Value) error {
 		buf.WriteString("null")
 
 	case reflect.Bool:
-		if v.Bool() {
-			fmt.Fprint(buf, "true")
-		} else {
-			fmt.Fprint(buf, "false")
-		}
+		fmt.Fprintf(buf, "%t", v.Bool())
 
 	case reflect.Int, reflect.Int8, reflect.Int16,
 		reflect.Int32, reflect.Int64:
@@ -36,10 +32,6 @@ func encode(buf *bytes.Buffer, v reflect.Value) error {
 
 	case reflect.Float32, reflect.Float64:
 		fmt.Fprintf(buf, "%f", v.Float())
-
-	case reflect.Complex64, reflect.Complex128:
-		c := v.Complex()
-		fmt.Fprintf(buf, `"#C(%f %f)"`, real(c), imag(c))
 
 	case reflect.String:
 		fmt.Fprintf(buf, "%q", v.String())
