@@ -1,12 +1,5 @@
 package display
 
-import (
-	"bytes"
-	"io"
-	"os"
-	"testing"
-)
-
 type A struct{ t string }
 type B struct {
 	t string
@@ -21,14 +14,7 @@ type D struct {
 	c C
 }
 
-func Test_Display_Recursive(t *testing.T) {
-	r, w, err := os.Pipe()
-	if err != nil {
-		t.Fatal(err)
-	}
-	stdout := os.Stdout
-	os.Stdout = w
-
+func ExampleDisplay_Recursive() {
 	d := D{
 		t: "d",
 		c: C{
@@ -42,14 +28,8 @@ func Test_Display_Recursive(t *testing.T) {
 		},
 	}
 	Display("d", d)
-
-	os.Stdout = stdout
-	w.Close()
-
-	var buf bytes.Buffer
-	io.Copy(&buf, r)
-
-	if buf.String() != "Display d (display.D):\nd.t = \"d\"\nd.c.t = \"c\"\n" {
-		t.Errorf("%q", buf.String())
-	}
+	// Output:
+	// Display d (display.D):
+	// d.t = "d"
+	// d.c.t = "c"
 }
