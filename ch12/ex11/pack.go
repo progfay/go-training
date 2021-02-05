@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/url"
 	"reflect"
-	"strconv"
 	"strings"
 )
 
@@ -39,7 +38,7 @@ func stringify(v reflect.Value) string {
 		return fmt.Sprintf("%f", v.Float())
 
 	case reflect.Bool:
-		return strconv.FormatBool(v.Bool())
+		return fmt.Sprintf("%t", v.Bool())
 
 	default:
 		return v.String()
