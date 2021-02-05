@@ -18,7 +18,7 @@ var testcases = []struct {
 	{
 		title:    "empty html",
 		htmlfile: "html/empty.html",
-		want: []string{},
+		want:     []string{},
 	},
 	{
 		title:    "nested html",

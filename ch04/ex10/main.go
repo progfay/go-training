@@ -40,18 +40,18 @@ func main() {
 	fmt.Println("Issues created at less than a month:")
 	for _, issue := range lessThanOneMonthIssues {
 		fmt.Printf("  #%-5d %9.9s %.55s\n",
-		issue.Number, issue.User.Login, issue.Title)
+			issue.Number, issue.User.Login, issue.Title)
 	}
 
 	fmt.Println("\nIssues created at less than a year:")
 	for _, issue := range lessThanOneYearIssues {
 		fmt.Printf("  #%-5d %9.9s %.55s\n",
-		issue.Number, issue.User.Login, issue.Title)
+			issue.Number, issue.User.Login, issue.Title)
 	}
 
 	fmt.Println("\nIssue created over a year ago:")
 	for _, issue := range moreThanOneYearIssues {
 		fmt.Printf("  #%-5d %9.9s %.55s\n",
-		issue.Number, issue.User.Login, issue.Title)
+			issue.Number, issue.User.Login, issue.Title)
 	}
 }

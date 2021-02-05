@@ -10,7 +10,7 @@ import (
 func reverse(s string) string {
 	rs := []rune(s)
 	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
-			rs[i], rs[j] = rs[j], rs[i]
+		rs[i], rs[j] = rs[j], rs[i]
 	}
 	return string(rs)
 }
@@ -47,15 +47,15 @@ var testcases = []struct {
 	{
 		title: "single replace",
 		in:    "abc $def ghe",
-		fun: reverse,
-		want: "abc fed ghe",
+		fun:   reverse,
+		want:  "abc fed ghe",
 	},
 
 	{
 		title: "multi replace",
 		in:    "$4321 $65 $0987",
-		fun: reverse,
-		want: "1234 56 7890",
+		fun:   reverse,
+		want:  "1234 56 7890",
 	},
 }
 
