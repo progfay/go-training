@@ -46,10 +46,18 @@ func equal(x, y reflect.Value, seen map[comparison]bool) bool {
 		return x.Uint() == y.Uint()
 
 	case reflect.Float32, reflect.Float64:
-		return math.Abs(x.Float()-y.Float()) < epsilon
+		xv, yv := x.Float(), y.Float()
+		if math.IsNaN(xv) || math.IsInf(xv, 0) || math.IsNaN(yv) || math.IsInf(yv, 0) {
+			return false
+		}
+		return math.Abs(xv-yv) < epsilon
 
 	case reflect.Complex64, reflect.Complex128:
-		return cmplx.Abs(x.Complex()-y.Complex()) < epsilon
+		xv, yv := x.Complex(), y.Complex()
+		if cmplx.IsNaN(xv) || cmplx.IsInf(xv) || cmplx.IsNaN(yv) || cmplx.IsInf(yv) {
+			return false
+		}
+		return cmplx.Abs(xv-yv) < epsilon
 
 	case reflect.Chan, reflect.UnsafePointer, reflect.Func:
 		return x.Pointer() == y.Pointer()
