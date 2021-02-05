@@ -1,11 +1,11 @@
 package display
 
-type S struct {
-	a int
-	b int
-}
-
 func ExampleDisplay_StructKeyMap() {
+	type S struct {
+		a int
+		b int
+	}
+
 	m := make(map[S]int)
 	m[S{a: 0, b: 0}] = 0
 	m[S{a: 1, b: 1}] = 1
