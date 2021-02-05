@@ -23,6 +23,9 @@ func Validate(target interface{}) error {
 		fieldInfo := value.Type().Field(i)
 		tag := fieldInfo.Tag
 		pattern := tag.Get("pattern")
+		if pattern == "" {
+			continue
+		}
 		r, ok := validator[pattern]
 		if !ok {
 			return fmt.Errorf("unknown pattern name: %q", pattern)
