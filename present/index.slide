@@ -1,4 +1,4 @@
-# プログラミング言語 Go 研修
+プログラミング言語 Go 研修
 GitHub Insights と振り返る
 5 Feb 2021
 
@@ -7,24 +7,24 @@ Recruit Technologies
 https://github.com/progfay
 @progfay
 
-##
+* 自己紹介
 
 .image images/178cd4cae7d930fb8444436a6b75910d.png _ 900
 
-## WriteCodeEveryday
+* WriteCodeEveryday
 
 .image images/c24f3b371fb21f9171b24774f33f1fb5.png _ 800
 .image images/a17a1bc2f82a684c8273f34dcdd68198.png _ 800
 .image images/9863495f855ce59650d9042e9eb8f12a.png _ 800
 
-## Insights
+* Insights
 
 - 毎日継続して少しづつ問題を解き進めていた
 - １日 1, 2 問を目安にしていた
 
 .image images/90942058f0894b13ce586b806cf0d452.png _ 1000
 
-## 感想
+* 感想
 
 - 練習問題がたくさんで大変だったが、毎日の楽しみでもあった
 - WriteCodeEveryday のネタに困らないという点ではありがたかった
