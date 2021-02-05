@@ -7,6 +7,8 @@ import (
 	"unsafe"
 )
 
+const epsilon = 1e-9
+
 func equal(x, y reflect.Value, seen map[comparison]bool) bool {
 	if !x.IsValid() || !y.IsValid() {
 		return x.IsValid() == y.IsValid()
@@ -44,10 +46,10 @@ func equal(x, y reflect.Value, seen map[comparison]bool) bool {
 		return x.Uint() == y.Uint()
 
 	case reflect.Float32, reflect.Float64:
-		return math.Abs(x.Float()-y.Float()) < 1e-9
+		return math.Abs(x.Float()-y.Float()) < epsilon
 
 	case reflect.Complex64, reflect.Complex128:
-		return cmplx.Abs(x.Complex()-y.Complex()) < 1e-9
+		return cmplx.Abs(x.Complex()-y.Complex()) < epsilon
 
 	case reflect.Chan, reflect.UnsafePointer, reflect.Func:
 		return x.Pointer() == y.Pointer()
